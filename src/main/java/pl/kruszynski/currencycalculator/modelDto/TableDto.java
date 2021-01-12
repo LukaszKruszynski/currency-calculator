@@ -1,18 +1,20 @@
-package pl.kruszynski.currencycalculator.model;
+package pl.kruszynski.currencycalculator.modelDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
+@Data
 @JsonFormat
-public class Table {
+public class TableDto {
     @JsonProperty
-    public String table;
+    private String table;
     @JsonProperty
-    public String no;
+    private String no;
     @JsonProperty
-    public LocalDate effectiveDate;
+    private LocalDate effectiveDate;
     @JsonProperty
-    public Currency rates;
+    private List<CurrencyDto> rates;
 }

@@ -4,10 +4,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CurrencyCalculatorApplicationTests {
+class CurrencyDtoCalculatorApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }

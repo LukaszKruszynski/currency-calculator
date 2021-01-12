@@ -1,15 +1,17 @@
-package pl.kruszynski.currencycalculator.model;
+package pl.kruszynski.currencycalculator.modelDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import java.math.BigDecimal;
+@Data
 @JsonFormat
-public class Currency {
+public class CurrencyDto {
     @JsonProperty
-    public String currency;
+    private String currency;
     @JsonProperty
-    public String code;
+    private String code;
     @JsonProperty
-    public BigDecimal mid;
+    private BigDecimal mid;
 }
