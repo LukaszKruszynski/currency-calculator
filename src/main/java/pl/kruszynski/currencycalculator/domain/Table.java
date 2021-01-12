@@ -17,4 +17,8 @@ public class Table {
     private String no;
     private LocalDate effectiveDate;
     private List<Currency> rates;
+
+    public Table(List<Currency> rates) {
+        this.rates = rates;
+    }
 }
