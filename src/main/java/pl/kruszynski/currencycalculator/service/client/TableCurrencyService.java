@@ -1,7 +1,5 @@
 package pl.kruszynski.currencycalculator.service.client;
 
-import lombok.Getter;
-import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -44,33 +42,38 @@ public class TableCurrencyService {
 
     @EventListener(ApplicationReadyEvent.class)
     @Scheduled(cron = "0 0 8 * * *")
-    private void fetchCurrencies() {
+    public void fetchCurrencies() {
         Map<Currency, BigDecimal> currencies = this.getAllRates().stream()
                 .collect(Collectors.toMap(e -> e, Currency::getMid));
         this.currencies = currencies;
     }
 
 
-    public void CalculateRates(BigDecimal amount, String currencyAmountCode, String currencyAmountCodeToCalculate) {
-        BigDecimal currencyValue;
-        BigDecimal currencyValueToCalculate;
+    public BigDecimal CalculateRates(BigDecimal amount, String currencyAmountCode, String currencyAmountCodeToCalculate) {
         List<BigDecimal> currencyAmountValueList = this.getCurrencies().entrySet().stream()
-                .filter(e -> e.getKey().getCode().equals(currencyAmountCode))
+                .filter(e -> e.getKey().getCode().equals(currencyAmountCode.toUpperCase()))
                 .map(e -> e.getKey().getMid())
                 .collect(Collectors.toList());
         List<BigDecimal> currencyAmountValueToCalculateList = this.getCurrencies().entrySet().stream()
-                .filter(e -> e.getKey().getCode().equals(currencyAmountCodeToCalculate))
+                .filter(e -> e.getKey().getCode().equals(currencyAmountCodeToCalculate.toUpperCase()))
                 .map(e -> e.getKey().getMid())
                 .collect(Collectors.toList());
-        if (currencyAmountValueList.size() > 0) {
-        }
-        if (currencyAmountValueToCalculateList.size() > 0) {
-            currencyValueToCalculate = currencyAmountValueToCalculateList.get(0);
-        }
 
+        BigDecimal currencyValue = currencyAmountValueList.stream().findFirst().orElse(new BigDecimal(0));
+        BigDecimal currencyValueToCalculate = currencyAmountValueToCalculateList.stream().findFirst().orElse(new BigDecimal(0));
+
+        BigDecimal toPLN = calculateToPLN(amount, currencyValue);
+        BigDecimal result = toPLN.divide(currencyValueToCalculate);
+        return result;
+
+
+    }
+    public BigDecimal calculateToPLN(BigDecimal amount, BigDecimal currencyValue) {
+       return amount.multiply(currencyValue);
     }
 
     public Map<Currency, BigDecimal> getCurrencies() {
         return currencies;
     }
+
 }

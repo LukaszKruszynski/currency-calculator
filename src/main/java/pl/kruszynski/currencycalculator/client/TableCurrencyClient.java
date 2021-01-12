@@ -9,6 +9,8 @@ import pl.kruszynski.currencycalculator.modelDto.TableDto;
 import pl.kruszynski.currencycalculator.modelDto.TableType;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Optional;
 
 import static pl.kruszynski.currencycalculator.configuration.Config.restTemplate;
 
@@ -30,7 +32,7 @@ public class TableCurrencyClient {
     @GetMapping
     public Table getRates(TableType tableType) {
         TableDto[] response = restTemplate().getForObject(uriBuilder(tableType), TableDto[].class);
-        return tableMapper.mapToTable(response[0]);
+        Optional<TableDto> optional = Arrays.stream(response).findAny();
+        return tableMapper.mapToTable(optional.get());
     }
-
 }
