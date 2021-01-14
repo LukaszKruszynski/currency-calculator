@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @RestController
 public class CurrencyController {
 
-    TableCurrencyService tableCurrencyService;
+    private final TableCurrencyService tableCurrencyService;
 
     @Autowired
     public CurrencyController(TableCurrencyService tableCurrencyService) {
