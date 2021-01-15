@@ -1,9 +1,6 @@
 package pl.kruszynski.currencycalculator.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.kruszynski.currencycalculator.client.TableCurrencyClient;
 import pl.kruszynski.currencycalculator.domain.Currency;
@@ -42,22 +39,16 @@ public class TableCurrencyService {
         return allTableTypeRates;
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    @Scheduled(cron = "0 0 8 * * *")
-    public void fillLocalMapCurrencies() {
-        Map<Currency, BigDecimal> currencies = this.fetchTableAAndBRates().stream()
+    public void fillCurrencies() {
+        currencies = this.fetchTableAAndBRates().stream()
                 .collect(Collectors.toMap(e -> e, Currency::getMid));
-        this.currencies = currencies;
     }
 
-
-    public BigDecimal CalculateRates(DataCalculateRate dataCalculateRate) {
+    public BigDecimal calculateRates(DataCalculateRate dataCalculateRate) {
         BigDecimal currencyValue = this.findCurrencyValue(dataCalculateRate.getCurrencyAmountCode());
         BigDecimal currencyValueToCalculate = this.findCurrencyValue(dataCalculateRate.getCurrencyAmountCodeToCalculate());
         BigDecimal toPLN = calculateToPLN(dataCalculateRate.getAmount(), currencyValue);
-        BigDecimal calculateResult = toPLN.divide(currencyValueToCalculate, RoundingMode.HALF_UP);
-        return calculateResult;
-
+        return toPLN.divide(currencyValueToCalculate, RoundingMode.HALF_UP);
     }
 
     public BigDecimal calculateToPLN(BigDecimal amount, BigDecimal currencyValue) {
@@ -69,8 +60,7 @@ public class TableCurrencyService {
                 .filter(e -> e.getKey().getCode().equals(currencyAmountCode.toUpperCase()))
                 .map(e -> e.getKey().getMid())
                 .collect(Collectors.toList());
-        BigDecimal currencyValue = currencyAmountValueList.stream().findFirst().orElse((BigDecimal.ZERO));
-        return currencyValue;
+        return currencyAmountValueList.stream().findFirst().orElse((BigDecimal.ZERO));
     }
 
     public Map<Currency, BigDecimal> getCurrencies() {
