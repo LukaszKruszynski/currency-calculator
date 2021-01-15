@@ -51,7 +51,7 @@ public class TableCurrencyService {
     }
 
 
-    public BigDecimal CalculateRates(DataCalculateRate dataCalculateRate) {
+    public BigDecimal calculateRates(DataCalculateRate dataCalculateRate) {
         BigDecimal currencyValue = this.findCurrencyValue(dataCalculateRate.getCurrencyAmountCode());
         BigDecimal currencyValueToCalculate = this.findCurrencyValue(dataCalculateRate.getCurrencyAmountCodeToCalculate());
         BigDecimal toPLN = calculateToPLN(dataCalculateRate.getAmount(), currencyValue);
