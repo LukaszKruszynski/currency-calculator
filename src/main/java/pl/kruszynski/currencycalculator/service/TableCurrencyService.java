@@ -43,9 +43,8 @@ public class TableCurrencyService {
     }
 
     public void fillCurrencies() {
-        Map<Currency, BigDecimal> currencies = this.fetchTableAAndBRates().stream()
+        currencies = this.fetchTableAAndBRates().stream()
                 .collect(Collectors.toMap(e -> e, Currency::getMid));
-        this.currencies = currencies;
     }
 
 
