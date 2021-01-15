@@ -1,12 +1,10 @@
 package pl.kruszynski.currencycalculator.client;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import pl.kruszynski.currencycalculator.domain.Table;
 import pl.kruszynski.currencycalculator.mapper.TableMapper;
 import pl.kruszynski.currencycalculator.modelDto.TableDto;
@@ -17,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static pl.kruszynski.currencycalculator.configuration.Config.restTemplate;
-
 @Component
 @RequiredArgsConstructor
 public class TableCurrencyClient {
@@ -26,6 +22,7 @@ public class TableCurrencyClient {
     private static final String JSON_FORMAT = "?format=json";
     private static final String API_URL = "http://api.nbp.pl/api/exchangerates/tables/";
     private final TableMapper tableMapper;
+    private final RestTemplate restTemplate;
 
 
     private URI uriBuilder(TableType tableType) {
@@ -36,7 +33,7 @@ public class TableCurrencyClient {
     public Table fetchRates(TableType tableType) {
         TableDto[] rates;
         try {
-            rates = restTemplate().getForObject(uriBuilder(tableType), TableDto[].class);
+            rates = restTemplate.getForObject(uriBuilder(tableType), TableDto[].class);
         } catch (RestClientException e) {
             return new Table(new ArrayList<>());
         }
