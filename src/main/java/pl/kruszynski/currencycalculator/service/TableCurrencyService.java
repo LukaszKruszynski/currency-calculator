@@ -42,9 +42,7 @@ public class TableCurrencyService {
         return allTableTypeRates;
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    @Scheduled(cron = "0 0 8 * * *")
-    public void fillLocalMapCurrencies() {
+    public void fillCurrencies() {
         Map<Currency, BigDecimal> currencies = this.fetchTableAAndBRates().stream()
                 .collect(Collectors.toMap(e -> e, Currency::getMid));
         this.currencies = currencies;
